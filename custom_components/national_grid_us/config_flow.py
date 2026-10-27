@@ -74,6 +74,10 @@ class NationalGridFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 ]
                 if not self._accounts:
                     return self.async_abort(reason="already_configured")
+                if len(self._accounts) == 1:
+                    return self._async_create_accounts_entry(
+                        [self._accounts[0]["billingAccountId"]]
+                    )
 
                 return await self.async_step_select_accounts()
 
@@ -113,19 +117,25 @@ class NationalGridFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     errors={"base": "no_accounts_selected"},
                 )
 
-            return self.async_create_entry(
-                title=self._username or "",
-                data={
-                    CONF_USERNAME: self._username,
-                    CONF_PASSWORD: self._password,
-                    CONF_SELECTED_ACCOUNTS: selected,
-                },
-            )
+            return self._async_create_accounts_entry(selected)
 
         return self.async_show_form(
             step_id="select_accounts",
             data_schema=self._get_account_selection_schema(),
             errors={},
+        )
+
+    def _async_create_accounts_entry(
+        self, selected: list[str]
+    ) -> config_entries.ConfigFlowResult:
+        """Create the config entry for the selected billing accounts."""
+        return self.async_create_entry(
+            title=self._username or "",
+            data={
+                CONF_USERNAME: self._username,
+                CONF_PASSWORD: self._password,
+                CONF_SELECTED_ACCOUNTS: selected,
+            },
         )
 
     async def async_step_reconfigure(
