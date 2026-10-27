@@ -6,12 +6,19 @@
                 "data": {
                     "username": "Username",
                     "password": "Password"
+                },
+                "data_description": {
+                    "username": "The username for your National Grid account.",
+                    "password": "The password for your National Grid account."
                 }
             },
             "select_accounts": {
                 "description": "Select which billing accounts to monitor.",
                 "data": {
                     "selected_accounts": "Billing Accounts"
+                },
+                "data_description": {
+                    "selected_accounts": "The billing accounts on this login to monitor."
                 }
             },
             "reauth_confirm": {
@@ -19,12 +26,19 @@
                 "data": {
                     "username": "Username",
                     "password": "Password"
+                },
+                "data_description": {
+                    "username": "The username for your National Grid account.",
+                    "password": "The password for your National Grid account."
                 }
             },
             "reconfigure": {
                 "description": "Update which National Grid accounts to monitor.",
                 "data": {
                     "selected_accounts": "Billing Accounts"
+                },
+                "data_description": {
+                    "selected_accounts": "The billing accounts on this login to monitor."
                 }
             }
         },
