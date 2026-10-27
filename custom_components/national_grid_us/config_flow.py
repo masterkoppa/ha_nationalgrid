@@ -46,14 +46,12 @@ class NationalGridFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     username=self._username,
                     password=self._password,
                 )
-            except InvalidAuthError as exception:
-                _LOGGER.warning(exception)
+            except InvalidAuthError:
                 _errors["base"] = "invalid_auth"
-            except CannotConnectError as exception:
-                _LOGGER.error(exception)
+            except CannotConnectError:
                 _errors["base"] = "cannot_connect"
-            except NationalGridError as exception:
-                _LOGGER.exception(exception)
+            except NationalGridError, ValueError:
+                _LOGGER.exception("Unexpected error")
                 _errors["base"] = "unknown"
             else:
                 if not self._accounts:
@@ -129,14 +127,12 @@ class NationalGridFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     username=reconfigure_entry.data[CONF_USERNAME],
                     password=reconfigure_entry.data[CONF_PASSWORD],
                 )
-            except InvalidAuthError as exception:
-                _LOGGER.warning(exception)
+            except InvalidAuthError:
                 _errors["base"] = "invalid_auth"
-            except CannotConnectError as exception:
-                _LOGGER.error(exception)
+            except CannotConnectError:
                 _errors["base"] = "cannot_connect"
-            except NationalGridError as exception:
-                _LOGGER.exception(exception)
+            except NationalGridError, ValueError:
+                _LOGGER.exception("Unexpected error")
                 _errors["base"] = "unknown"
             else:
                 if not self._accounts:
@@ -191,14 +187,12 @@ class NationalGridFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     username=username,
                     password=password,
                 )
-            except InvalidAuthError as exception:
-                _LOGGER.warning(exception)
+            except InvalidAuthError:
                 _errors["base"] = "invalid_auth"
-            except CannotConnectError as exception:
-                _LOGGER.error(exception)
+            except CannotConnectError:
                 _errors["base"] = "cannot_connect"
-            except NationalGridError as exception:
-                _LOGGER.exception(exception)
+            except NationalGridError, ValueError:
+                _LOGGER.exception("Unexpected error")
                 _errors["base"] = "unknown"
             else:
                 reauth_entry = self._get_reauth_entry()

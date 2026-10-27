@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from unittest.mock import AsyncMock, patch
 
+import pytest
 from homeassistant import config_entries
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
 from homeassistant.core import HomeAssistant
@@ -175,15 +176,22 @@ async def test_user_step_communication_error(hass: HomeAssistant) -> None:
     assert result["step_id"] == "select_accounts"
 
 
-async def test_user_step_unknown_error(hass: HomeAssistant) -> None:
+@pytest.mark.parametrize(
+    "side_effect",
+    [
+        pytest.param(NationalGridError("Something broke"), id="national_grid_error"),
+        pytest.param(ValueError("Malformed response"), id="value_error"),
+    ],
+)
+async def test_user_step_unknown_error(
+    hass: HomeAssistant, side_effect: Exception
+) -> None:
     """Test user step with unknown error."""
     with patch(PATCH_CLIENT) as mock_cls:
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
-        client.get_linked_accounts = AsyncMock(
-            side_effect=NationalGridError("Something broke"),
-        )
+        client.get_linked_accounts = AsyncMock(side_effect=side_effect)
 
         result = await hass.config_entries.flow.async_init(
             DOMAIN,
