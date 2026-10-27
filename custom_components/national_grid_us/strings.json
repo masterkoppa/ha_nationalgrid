@@ -29,8 +29,8 @@
             }
         },
         "error": {
-            "auth": "Invalid username or password.",
-            "connection": "Unable to connect to National Grid.",
+            "invalid_auth": "Invalid username or password.",
+            "cannot_connect": "Unable to connect to National Grid.",
             "unknown": "An unexpected error occurred.",
             "no_accounts_selected": "Please select at least one account."
         },

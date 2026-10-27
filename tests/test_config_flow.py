@@ -117,7 +117,7 @@ async def test_user_step_auth_error(hass: HomeAssistant) -> None:
         )
 
     assert result["type"] is FlowResultType.FORM
-    assert result["errors"]["base"] == "auth"
+    assert result["errors"]["base"] == "invalid_auth"
 
     # Recovery: valid credentials should advance to account selection.
     with patch(PATCH_CLIENT) as mock_cls:
@@ -156,7 +156,7 @@ async def test_user_step_communication_error(hass: HomeAssistant) -> None:
         )
 
     assert result["type"] is FlowResultType.FORM
-    assert result["errors"]["base"] == "connection"
+    assert result["errors"]["base"] == "cannot_connect"
 
     # Recovery: valid credentials should advance to account selection.
     with patch(PATCH_CLIENT) as mock_cls:
@@ -351,7 +351,7 @@ async def test_reauth_confirm_auth_error(hass: HomeAssistant) -> None:
         )
 
     assert result["type"] is FlowResultType.FORM
-    assert result["errors"]["base"] == "auth"
+    assert result["errors"]["base"] == "invalid_auth"
 
 
 async def test_reauth_confirm_connection_error(hass: HomeAssistant) -> None:
@@ -386,7 +386,7 @@ async def test_reauth_confirm_connection_error(hass: HomeAssistant) -> None:
         )
 
     assert result["type"] is FlowResultType.FORM
-    assert result["errors"]["base"] == "connection"
+    assert result["errors"]["base"] == "cannot_connect"
 
 
 async def test_reauth_confirm_unknown_error(hass: HomeAssistant) -> None:
@@ -537,7 +537,7 @@ async def test_reconfigure_auth_error(hass: HomeAssistant) -> None:
         result = await entry.start_reconfigure_flow(hass)
 
     assert result["type"] is FlowResultType.FORM
-    assert result["errors"]["base"] == "auth"
+    assert result["errors"]["base"] == "invalid_auth"
 
 
 async def test_reconfigure_connection_error(hass: HomeAssistant) -> None:
@@ -555,7 +555,7 @@ async def test_reconfigure_connection_error(hass: HomeAssistant) -> None:
         result = await entry.start_reconfigure_flow(hass)
 
     assert result["type"] is FlowResultType.FORM
-    assert result["errors"]["base"] == "connection"
+    assert result["errors"]["base"] == "cannot_connect"
 
 
 async def test_reconfigure_unknown_error(hass: HomeAssistant) -> None:

@@ -48,10 +48,10 @@ class NationalGridFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 )
             except InvalidAuthError as exception:
                 _LOGGER.warning(exception)
-                _errors["base"] = "auth"
+                _errors["base"] = "invalid_auth"
             except CannotConnectError as exception:
                 _LOGGER.error(exception)
-                _errors["base"] = "connection"
+                _errors["base"] = "cannot_connect"
             except NationalGridError as exception:
                 _LOGGER.exception(exception)
                 _errors["base"] = "unknown"
@@ -131,10 +131,10 @@ class NationalGridFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 )
             except InvalidAuthError as exception:
                 _LOGGER.warning(exception)
-                _errors["base"] = "auth"
+                _errors["base"] = "invalid_auth"
             except CannotConnectError as exception:
                 _LOGGER.error(exception)
-                _errors["base"] = "connection"
+                _errors["base"] = "cannot_connect"
             except NationalGridError as exception:
                 _LOGGER.exception(exception)
                 _errors["base"] = "unknown"
@@ -193,10 +193,10 @@ class NationalGridFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 )
             except InvalidAuthError as exception:
                 _LOGGER.warning(exception)
-                _errors["base"] = "auth"
+                _errors["base"] = "invalid_auth"
             except CannotConnectError as exception:
                 _LOGGER.error(exception)
-                _errors["base"] = "connection"
+                _errors["base"] = "cannot_connect"
             except NationalGridError as exception:
                 _LOGGER.exception(exception)
                 _errors["base"] = "unknown"
