@@ -275,17 +275,25 @@ class NationalGridFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             result = []
             for account in accounts:
                 account_dict: dict[str, str] = dict(account.items())  # type: ignore[arg-type]
+                account_dict["serviceAddressCompressed"] = ""
+                # The address only labels the account, so a failed lookup
+                # degrades to the bare ID.
                 try:
                     billing = await client.get_billing_account(
                         account["billingAccountId"]
                     )
+                except (CannotConnectError, NationalGridError, ValueError) as err:
+                    _LOGGER.debug(
+                        "Could not fetch service address for account %s: %s",
+                        account["billingAccountId"],
+                        err,
+                    )
+                else:
                     account_dict["serviceAddressCompressed"] = (
                         billing.get("serviceAddress", {}).get(
                             "serviceAddressCompressed", ""
                         )
                         or ""
                     )
-                except Exception:  # noqa: BLE001
-                    account_dict["serviceAddressCompressed"] = ""
                 result.append(account_dict)
             return result

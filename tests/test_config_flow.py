@@ -44,6 +44,7 @@ async def test_user_step_single_account(hass: HomeAssistant) -> None:
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(
             return_value=[{"billingAccountId": MOCK_ACCOUNT_ID}],
         )
@@ -78,6 +79,7 @@ async def test_user_step_multiple_accounts(hass: HomeAssistant) -> None:
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(
             return_value=[
                 {"billingAccountId": MOCK_ACCOUNT_ID},
@@ -104,6 +106,7 @@ async def test_user_step_auth_error(hass: HomeAssistant) -> None:
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(
             side_effect=InvalidAuthError("Bad creds"),
         )
@@ -125,6 +128,7 @@ async def test_user_step_auth_error(hass: HomeAssistant) -> None:
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(
             return_value=[{"billingAccountId": MOCK_ACCOUNT_ID}],
         )
@@ -143,6 +147,7 @@ async def test_user_step_communication_error(hass: HomeAssistant) -> None:
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(
             side_effect=CannotConnectError("Timeout"),
         )
@@ -164,6 +169,7 @@ async def test_user_step_communication_error(hass: HomeAssistant) -> None:
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(
             return_value=[{"billingAccountId": MOCK_ACCOUNT_ID}],
         )
@@ -191,6 +197,7 @@ async def test_user_step_unknown_error(
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(side_effect=side_effect)
 
         result = await hass.config_entries.flow.async_init(
@@ -210,6 +217,7 @@ async def test_user_step_unknown_error(
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(
             return_value=[{"billingAccountId": MOCK_ACCOUNT_ID}],
         )
@@ -228,6 +236,7 @@ async def test_select_accounts_step(hass: HomeAssistant) -> None:
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(
             return_value=[
                 {"billingAccountId": MOCK_ACCOUNT_ID},
@@ -263,6 +272,7 @@ async def test_select_accounts_none_selected(hass: HomeAssistant) -> None:
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(
             return_value=[
                 {"billingAccountId": MOCK_ACCOUNT_ID},
@@ -306,6 +316,7 @@ async def test_reauth_flow(hass: HomeAssistant) -> None:
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(
             return_value=[{"billingAccountId": MOCK_ACCOUNT_ID}],
         )
@@ -345,6 +356,7 @@ async def test_reauth_confirm_auth_error(hass: HomeAssistant) -> None:
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(
             side_effect=InvalidAuthError("Bad creds"),
         )
@@ -380,6 +392,7 @@ async def test_reauth_confirm_connection_error(hass: HomeAssistant) -> None:
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(
             side_effect=CannotConnectError("Timeout"),
         )
@@ -415,6 +428,7 @@ async def test_reauth_confirm_unknown_error(hass: HomeAssistant) -> None:
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(
             side_effect=NationalGridError("Server error"),
         )
@@ -458,6 +472,7 @@ async def test_reconfigure_shows_form_with_current_selection(
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(
             return_value=[
                 {"billingAccountId": MOCK_ACCOUNT_ID},
@@ -479,6 +494,7 @@ async def test_reconfigure_updates_selected_accounts(hass: HomeAssistant) -> Non
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(
             return_value=[
                 {"billingAccountId": MOCK_ACCOUNT_ID},
@@ -512,6 +528,7 @@ async def test_reconfigure_no_accounts_selected_shows_error(
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(
             return_value=[
                 {"billingAccountId": MOCK_ACCOUNT_ID},
@@ -538,6 +555,7 @@ async def test_reconfigure_auth_error(hass: HomeAssistant) -> None:
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(
             side_effect=InvalidAuthError("Bad creds"),
         )
@@ -556,6 +574,7 @@ async def test_reconfigure_connection_error(hass: HomeAssistant) -> None:
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(
             side_effect=CannotConnectError("Timeout"),
         )
@@ -574,6 +593,7 @@ async def test_reconfigure_unknown_error(hass: HomeAssistant) -> None:
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(
             side_effect=NationalGridError("Server error"),
         )
@@ -590,6 +610,7 @@ async def test_user_step_no_accounts_found(hass: HomeAssistant) -> None:
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(return_value=[])
 
         result = await hass.config_entries.flow.async_init(
@@ -613,6 +634,7 @@ async def test_reconfigure_no_accounts_found(hass: HomeAssistant) -> None:
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(return_value=[])
 
         result = await entry.start_reconfigure_flow(hass)
@@ -632,6 +654,7 @@ async def test_account_selection_label_includes_service_address(
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(
             return_value=[{"billingAccountId": MOCK_ACCOUNT_ID}],
         )
@@ -654,18 +677,27 @@ async def test_account_selection_label_includes_service_address(
     assert "123 Main St" in options[0]["label"]
 
 
+@pytest.mark.parametrize(
+    "side_effect",
+    [
+        pytest.param(CannotConnectError("timeout"), id="cannot_connect"),
+        pytest.param(NationalGridError("lookup failed"), id="national_grid_error"),
+        pytest.param(ValueError("GraphQL error"), id="value_error"),
+    ],
+)
 async def test_account_selection_label_without_service_address_on_error(
-    hass: HomeAssistant,
+    hass: HomeAssistant, side_effect: Exception
 ) -> None:
     """Test account label falls back gracefully when get_billing_account raises."""
     with patch(PATCH_CLIENT) as mock_cls:
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(
             return_value=[{"billingAccountId": MOCK_ACCOUNT_ID}],
         )
-        client.get_billing_account = AsyncMock(side_effect=Exception("lookup failed"))
+        client.get_billing_account = AsyncMock(side_effect=side_effect)
 
         result = await hass.config_entries.flow.async_init(
             DOMAIN,
@@ -701,6 +733,7 @@ async def test_already_configured(hass: HomeAssistant) -> None:
         client = mock_cls.return_value
         client.__aenter__ = AsyncMock(return_value=client)
         client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
         client.get_linked_accounts = AsyncMock(
             return_value=[{"billingAccountId": MOCK_ACCOUNT_ID}],
         )
