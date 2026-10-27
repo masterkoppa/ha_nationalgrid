@@ -60,6 +60,21 @@ class NationalGridFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 await self.async_set_unique_id(slugify(self._username))
                 self._abort_if_unique_id_configured()
 
+                # Another login can share a billing account; entity unique IDs
+                # are per account, so each account may only be in one entry.
+                configured = {
+                    account_id
+                    for entry in self._async_current_entries(include_ignore=False)
+                    for account_id in entry.data.get(CONF_SELECTED_ACCOUNTS, [])
+                }
+                self._accounts = [
+                    account
+                    for account in self._accounts
+                    if account["billingAccountId"] not in configured
+                ]
+                if not self._accounts:
+                    return self.async_abort(reason="already_configured")
+
                 return await self.async_step_select_accounts()
 
         return self.async_show_form(

@@ -749,3 +749,78 @@ async def test_already_configured(hass: HomeAssistant) -> None:
 
     assert result["type"] is FlowResultType.ABORT
     assert result["reason"] == "already_configured"
+
+
+def _add_other_login_entry(hass: HomeAssistant, selected: list[str]) -> None:
+    """Register an entry for a different login that monitors `selected`."""
+    MockConfigEntry(
+        domain=DOMAIN,
+        title="other@example.com",
+        data={
+            CONF_USERNAME: "other@example.com",
+            CONF_PASSWORD: MOCK_PASSWORD,
+            CONF_SELECTED_ACCOUNTS: selected,
+        },
+        unique_id="other-example-com",
+    ).add_to_hass(hass)
+
+
+async def test_user_step_hides_accounts_configured_by_another_login(
+    hass: HomeAssistant,
+) -> None:
+    """Test accounts monitored by another entry are not offered again."""
+    _add_other_login_entry(hass, [MOCK_ACCOUNT_ID])
+
+    with patch(PATCH_CLIENT) as mock_cls:
+        client = mock_cls.return_value
+        client.__aenter__ = AsyncMock(return_value=client)
+        client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
+        client.get_linked_accounts = AsyncMock(
+            return_value=[
+                {"billingAccountId": MOCK_ACCOUNT_ID},
+                {"billingAccountId": MOCK_ACCOUNT_ID_2},
+            ],
+        )
+
+        result = await hass.config_entries.flow.async_init(
+            DOMAIN,
+            context={"source": config_entries.SOURCE_USER},
+            data={
+                CONF_USERNAME: MOCK_USERNAME,
+                CONF_PASSWORD: MOCK_PASSWORD,
+            },
+        )
+
+    assert result["type"] is FlowResultType.FORM
+    assert result["step_id"] == "select_accounts"
+    options = result["data_schema"].schema[CONF_SELECTED_ACCOUNTS].config["options"]
+    assert [option["value"] for option in options] == [MOCK_ACCOUNT_ID_2]
+
+
+async def test_user_step_aborts_when_all_accounts_configured_by_another_login(
+    hass: HomeAssistant,
+) -> None:
+    """Test the flow aborts when every account is already monitored."""
+    _add_other_login_entry(hass, [MOCK_ACCOUNT_ID])
+
+    with patch(PATCH_CLIENT) as mock_cls:
+        client = mock_cls.return_value
+        client.__aenter__ = AsyncMock(return_value=client)
+        client.__aexit__ = AsyncMock(return_value=False)
+        client.get_billing_account = AsyncMock(return_value={})
+        client.get_linked_accounts = AsyncMock(
+            return_value=[{"billingAccountId": MOCK_ACCOUNT_ID}],
+        )
+
+        result = await hass.config_entries.flow.async_init(
+            DOMAIN,
+            context={"source": config_entries.SOURCE_USER},
+            data={
+                CONF_USERNAME: MOCK_USERNAME,
+                CONF_PASSWORD: MOCK_PASSWORD,
+            },
+        )
+
+    assert result["type"] is FlowResultType.ABORT
+    assert result["reason"] == "already_configured"
